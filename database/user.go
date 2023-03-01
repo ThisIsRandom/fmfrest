@@ -29,7 +29,7 @@ type Profile struct {
 	Description string  `json:"description"`
 	Avatar      string  `json:"avatar"`
 	Images      []Image `json:"images"`
-	RoleID      *int    `json:"roleId"`
+	RoleID      *int    `json:"roleId" gorm:"default:1"`
 	Role        Role    `json:"role"`
 }
 

@@ -49,7 +49,8 @@ func (controller *AuthController) Login(c *fiber.Ctx) error {
 	}
 
 	claims := jwt.MapClaims{
-		"id": user.ID,
+		"id":   int(user.ID),
+		"role": int(*user.Profile.RoleID),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

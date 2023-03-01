@@ -11,6 +11,7 @@ type Connection struct {
 
 func NewDatabaseConnection(dsn string) (*Connection, error) {
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	var seeder Seeder
 
 	db.Migrator().DropTable(
 		&User{},
@@ -29,6 +30,8 @@ func NewDatabaseConnection(dsn string) (*Connection, error) {
 		Image{},
 		Advertisement{},
 	)
+
+	seeder.Seed(db)
 
 	if err != nil {
 		return nil, err

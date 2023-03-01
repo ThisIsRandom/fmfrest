@@ -15,10 +15,6 @@ type DeleteRequest struct {
 	Id int `json:"id"`
 }
 
-type FindAllResponse struct {
-	items []database.Advertisement
-}
-
 func (controller *AdvertisementController) Create(c *fiber.Ctx) error {
 	var advertisement database.Advertisement
 

@@ -24,13 +24,17 @@ func (controller *UserController) CreateRole(c *fiber.Ctx) error {
 	return c.JSON(role)
 }
 
+func (controller *UserController) GetIdFromCtx(c *fiber.Ctx) uint {
+	user := c.Locals("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	userId := claims["id"].(float64)
+	return uint(userId)
+}
+
 func (controller *UserController) GetUser(c *fiber.Ctx) error {
 	var r database.User
 
-	user := c.Locals("user").(*jwt.Token)
-
-	claims := user.Claims.(jwt.MapClaims)
-	userId := claims["id"].(float64)
+	userId := controller.GetIdFromCtx(c)
 
 	tx := controller.
 		db.
@@ -52,6 +56,23 @@ func NewUserController(db *database.Connection) *UserController {
 	}
 }
 
+func (controller *UserController) UpdateUserProfile(c *fiber.Ctx) error {
+	var user database.Profile
+	user.ID = controller.GetIdFromCtx(c)
+
+	if err := c.BodyParser(&user); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, "Couldnt parse **update user**")
+	}
+
+	tx := controller.db.Instance.Model(&database.User{}).Select("Profile").Where("ID = ?", user.ID).Updates(user)
+
+	if tx.Error != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, "Couldnt save to db **update user**")
+	}
+
+	return c.JSON(user)
+}
+
 func RegisterUserController(router fiber.Router, db *database.Connection) {
 	c := NewUserController(
 		db,
@@ -60,5 +81,6 @@ func RegisterUserController(router fiber.Router, db *database.Connection) {
 	r := router.Group("user")
 
 	r.Get("/", c.GetUser)
+	r.Post("/", c.UpdateUserProfile)
 
 }
