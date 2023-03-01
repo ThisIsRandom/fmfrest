@@ -50,7 +50,7 @@ func (controller *TaskController) Create(c *fiber.Ctx) error {
 			file, err := fileHeader.Open()
 
 			if err != nil {
-				return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+				return fiber.NewError(fiber.StatusInternalServerError, "fileopen error")
 			}
 
 			pattern := "fmf-*" + filepath.Ext(fileHeader.Filename)
@@ -58,20 +58,20 @@ func (controller *TaskController) Create(c *fiber.Ctx) error {
 			tmpFile, err := os.CreateTemp("", pattern)
 
 			if err != nil {
-				return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+				return fiber.NewError(fiber.StatusInternalServerError, "create temp fail")
 			}
 
 			_, err = io.Copy(tmpFile, file)
 
 			if err != nil {
-				return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+				return fiber.NewError(fiber.StatusInternalServerError, "copy to temp fail")
 			}
 
 			var d *internal.SaveImageResult
 			d, err = controller.store.SaveImage(tmpFile.Name())
 
 			if err != nil {
-				return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+				return fiber.NewError(fiber.StatusInternalServerError, "save image err")
 			}
 
 			taskImage := database.TaskImage{
@@ -80,11 +80,9 @@ func (controller *TaskController) Create(c *fiber.Ctx) error {
 
 			images = append(images, taskImage)
 		}
-
-		return c.JSON(images)
 	}
 
-	return c.JSON(fiber.Map{"ok": "ok"})
+	return c.JSON(images)
 }
 
 func NewTaskController(db *database.Connection, store *internal.CloudinaryStorage) *TaskController {

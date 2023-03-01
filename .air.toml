@@ -4,7 +4,7 @@ tmp_dir = "tmp"
 
 [build]
   args_bin = []
-  bin = ";DB_HOST=127.0.0.1 DB_PORT=3306 DB_USER=root DB_PASSWORD=rootroot DB_DATABASE=fmf ./tmp/main"
+  bin = ";PORT=3000 MYSQLHOST=127.0.0.1 MYSQLPORT=3306 MYSQLUSER=root MYSQLPASSWORD=rootroot MYSQLDATABASE=fmf ./tmp/main"
   cmd = "go build -o ./tmp/main ."
   delay = 0
   exclude_dir = ["assets", "tmp", "vendor", "testdata"]
