@@ -100,4 +100,6 @@ func RegisterTaskController(router fiber.Router, db *database.Connection, store 
 	c := NewTaskController(db, store)
 
 	r.Post("/", c.Create)
+
+	r.Get("/", c.FindAll)
 }
