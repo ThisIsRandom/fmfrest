@@ -12,4 +12,6 @@ func main() {
 	api.Get("/", func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"ok": "ok"})
 	})
+
+	app.Listen(":3000")
 }
