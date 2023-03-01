@@ -28,6 +28,7 @@ func (controller *UserController) GetUser(c *fiber.Ctx) error {
 	var r database.User
 
 	user := c.Locals("user").(*jwt.Token)
+
 	claims := user.Claims.(jwt.MapClaims)
 	userId := claims["id"].(float64)
 
