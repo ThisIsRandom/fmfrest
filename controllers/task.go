@@ -70,6 +70,8 @@ func (controller *TaskController) Create(c *fiber.Ctx) error {
 			var d *internal.SaveImageResult
 			d, err = controller.store.SaveImage(tmpFile.Name())
 
+			os.Remove(tmpFile.Name())
+
 			if err != nil {
 				return fiber.NewError(fiber.StatusInternalServerError, "save image err")
 			}
