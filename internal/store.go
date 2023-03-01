@@ -2,6 +2,7 @@ package internal
 
 import (
 	"context"
+	"os"
 
 	"github.com/cloudinary/cloudinary-go/v2"
 	"github.com/cloudinary/cloudinary-go/v2/api/uploader"
@@ -30,6 +31,8 @@ func (s *CloudinaryStorage) SaveImage(path string) (*SaveImageResult, error) {
 	response, err := s.client.Upload.Upload(context.Background(), path, uploader.UploadParams{
 		PublicID: uuid.NewString(),
 	})
+
+	os.Remove(path)
 
 	if err != nil {
 		return nil, err
