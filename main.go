@@ -57,5 +57,5 @@ func main() {
 	controllers.RegisterUserController(api, dbConn)
 	controllers.RegisterTaskController(api, dbConn, imageStore)
 
-	panic(app.Listen(":3000"))
+	panic(app.Listen(os.Getenv("PORT")))
 }
