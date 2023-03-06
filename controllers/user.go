@@ -56,15 +56,15 @@ func NewUserController(db *database.Connection) *UserController {
 	}
 }
 
-func (controller *UserController) UpdateUserProfile(c *fiber.Ctx) error {
-	var user database.Profile
+func (controller *UserController) Update(c *fiber.Ctx) error {
+	var user database.User
 	user.ID = controller.GetIdFromCtx(c)
 
 	if err := c.BodyParser(&user); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "Couldnt parse **update user**")
 	}
 
-	tx := controller.db.Instance.Model(&database.User{}).Select("Profile").Where("ID = ?", user.ID).Updates(user)
+	tx := controller.db.Instance.Updates(&user)
 
 	if tx.Error != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, "Couldnt save to db **update user**")
@@ -81,6 +81,5 @@ func RegisterUserController(router fiber.Router, db *database.Connection) {
 	r := router.Group("user")
 
 	r.Get("/", c.GetUser)
-	r.Post("/", c.UpdateUserProfile)
-
+	r.Post("/", c.Update)
 }

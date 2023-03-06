@@ -1,10 +1,6 @@
 package controllers
 
 import (
-	"io"
-	"os"
-	"path/filepath"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/thisisrandom/fmfrest/database"
 	"github.com/thisisrandom/fmfrest/internal"
@@ -28,12 +24,26 @@ func (controller *TaskController) FindAll(c *fiber.Ctx) error {
 }
 
 func (controller *TaskController) Create(c *fiber.Ctx) error {
-	//var task database.Task
+	var task database.Task
+
+	if err := c.BodyParser(&task); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	}
+
+	if tx := controller.db.Instance.Create(&task); tx.Error != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, tx.Error.Error())
+	}
+
+	return c.JSON(task)
+}
+
+/* func (controller *TaskController) Create(c *fiber.Ctx) error {
+	var task database.Task
 	var images []database.TaskImage
 
-	/* if err := c.BodyParser(&task); err != nil {
+	if err := c.BodyParser(&task); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, err.Error())
-	} */
+	}
 
 	form, err := c.MultipartForm()
 
@@ -41,9 +51,9 @@ func (controller *TaskController) Create(c *fiber.Ctx) error {
 		return err
 	}
 
-	/* if err != nil {
+	if err != nil {
 		fiber.NewError(fiber.StatusInternalServerError, "dadad")
-	} */
+	}
 
 	for _, fileHeaders := range form.File {
 		for _, fileHeader := range fileHeaders {
@@ -83,7 +93,7 @@ func (controller *TaskController) Create(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(images)
-}
+} */
 
 func NewTaskController(db *database.Connection, store *internal.CloudinaryStorage) *TaskController {
 	return &TaskController{
