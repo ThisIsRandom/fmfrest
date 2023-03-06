@@ -15,7 +15,9 @@ type Task struct {
 type MessageStream struct {
 	gorm.Model
 	Messages []Message
-	TaskID   int `json:"taskId"`
+	TaskID   int  `json:"taskId"`
+	UserID   int  `json:"userId"`
+	User     User `json:"user"`
 }
 
 type Message struct {
