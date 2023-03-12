@@ -16,19 +16,27 @@ func NewDatabaseConnection(dsn string) (*Connection, error) {
 	db.Migrator().DropTable(
 		&User{},
 		&ContactInformation{},
-		Role{},
-		Profile{},
-		Image{},
-		Advertisement{},
+		&Role{},
+		&Profile{},
+		&Image{},
+		&Advertisement{},
+		&Task{},
+		&TaskImage{},
+		&MessageStream{},
+		&Message{},
 	)
 
 	db.AutoMigrate(
 		&User{},
 		&ContactInformation{},
-		Role{},
-		Profile{},
-		Image{},
-		Advertisement{},
+		&Role{},
+		&Profile{},
+		&Image{},
+		&Advertisement{},
+		&Task{},
+		&TaskImage{},
+		&MessageStream{},
+		&Message{},
 	)
 
 	seeder.Seed(db)

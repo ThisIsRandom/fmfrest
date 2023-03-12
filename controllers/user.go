@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/thisisrandom/fmfrest/database"
+	"gorm.io/gorm"
 )
 
 type UserController struct {
@@ -39,6 +40,7 @@ func (controller *UserController) GetUser(c *fiber.Ctx) error {
 	tx := controller.
 		db.
 		Instance.
+		Debug().
 		Preload("Profile.Role").
 		Preload("ContactInformation").
 		First(&r, "id = ?", userId)
@@ -57,6 +59,7 @@ func NewUserController(db *database.Connection) *UserController {
 }
 
 func (controller *UserController) Update(c *fiber.Ctx) error {
+
 	var user database.User
 	user.ID = controller.GetIdFromCtx(c)
 
@@ -64,7 +67,7 @@ func (controller *UserController) Update(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, "Couldnt parse **update user**")
 	}
 
-	tx := controller.db.Instance.Updates(&user)
+	tx := controller.db.Instance.Debug().Session(&gorm.Session{FullSaveAssociations: true}).Updates(&user)
 
 	if tx.Error != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, "Couldnt save to db **update user**")

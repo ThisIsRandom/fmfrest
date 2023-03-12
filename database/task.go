@@ -9,21 +9,23 @@ type Task struct {
 	Images         []TaskImage     `json:"images"`
 	UserID         *int            `gorm:"not null" json:"userId"`
 	User           User            `json:"user"`
-	MessageStreams []MessageStream `json:"messageStream"`
+	MessageStreams []MessageStream `json:"messageStreams"`
 }
 
 type MessageStream struct {
 	gorm.Model
-	Messages []Message
-	TaskID   int  `json:"taskId"`
-	UserID   int  `json:"userId"`
-	User     User `json:"user"`
+	Messages []Message `json:"messages"`
+	TaskID   int       `json:"taskId"`
+	UserID   int       `json:"userId"`
+	User     User      `json:"user"`
 }
 
 type Message struct {
 	gorm.Model
-	Text            *string `gorm:"not null"`
-	MessageStreamID int     `json:"messageStreamId"`
+	Text            *string `gorm:"not null" json:"text"`
+	MessageStreamID *int    `json:"messageStreamId"`
+	UserID          *int    `json:"userId" gorm:"not null"`
+	User            User    `json:"user"`
 }
 
 type TaskImage struct {

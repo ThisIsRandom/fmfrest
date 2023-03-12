@@ -12,6 +12,8 @@ var (
 	mail2    string
 	password string
 	name     string
+
+	roleId int
 )
 
 func (s *Seeder) Seed(db *gorm.DB) {
@@ -22,6 +24,7 @@ func (s *Seeder) Seed(db *gorm.DB) {
 	password = "$2a$10$r5Dgfbo5TNX7nWurezTkwObY/8hvPJ5qfJDDIdujvcbbXRCeKh42y"
 	name = "test"
 	mail2 = "business@business.dk"
+	roleId = 2
 
 	roles := []Role{
 		{Name: &role1},
@@ -41,7 +44,8 @@ func (s *Seeder) Seed(db *gorm.DB) {
 			Email:    &mail2,
 			Password: &password,
 			Profile: Profile{
-				Name: name,
+				Name:   name,
+				RoleID: &roleId,
 			},
 		},
 	}

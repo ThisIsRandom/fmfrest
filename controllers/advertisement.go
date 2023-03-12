@@ -5,6 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/thisisrandom/fmfrest/database"
+	"github.com/thisisrandom/fmfrest/internal"
 )
 
 type AdvertisementController struct {
@@ -18,11 +19,13 @@ type DeleteRequest struct {
 func (controller *AdvertisementController) Create(c *fiber.Ctx) error {
 	var advertisement database.Advertisement
 
+	advertisement.UserID = int(internal.GetIdFromCtx(c))
+
 	if err := c.BodyParser(&advertisement); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, "couldnt parse advertisement")
 	}
 
-	if tx := controller.db.Instance.Create(&advertisement); tx.Error != nil {
+	if tx := controller.db.Instance.Debug().Create(&advertisement); tx.Error != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, tx.Error.Error())
 	}
 

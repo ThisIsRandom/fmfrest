@@ -1,9 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/gofiber/fiber/v2"
 	jwtware "github.com/gofiber/jwt/v3"
 	"github.com/thisisrandom/fmfrest/controllers"
@@ -33,15 +30,15 @@ func main() {
 	}
 
 	dbConn, err := database.NewDatabaseConnection(
-		//fakeItTillUMakeIt,
-		fmt.Sprintf(
+		fakeItTillUMakeIt,
+		/* fmt.Sprintf(
 			"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 			os.Getenv("MYSQLUSER"),
 			os.Getenv("MYSQLPASSWORD"),
 			os.Getenv("MYSQLHOST"),
 			os.Getenv("MYSQLPORT"),
 			os.Getenv("MYSQLDATABASE"),
-		),
+		), */
 	)
 
 	if err != nil {
@@ -57,5 +54,5 @@ func main() {
 	controllers.RegisterUserController(api, dbConn)
 	controllers.RegisterTaskController(api, dbConn, imageStore)
 
-	panic(app.Listen(fmt.Sprintf(":%s", os.Getenv("PORT"))))
+	panic(app.Listen( /* fmt.Sprintf(":%s", os.Getenv("PORT")) */ ":3000"))
 }
