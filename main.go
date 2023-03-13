@@ -6,6 +6,8 @@ import (
 	"github.com/thisisrandom/fmfrest/controllers"
 	"github.com/thisisrandom/fmfrest/database"
 	"github.com/thisisrandom/fmfrest/internal"
+	"fmt"
+	"os"
 )
 
 var (
